@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Clientes</title>
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><div class="logo">P</div><div><h1>Podología</h1><div style="font-size:12px;color:var(--muted)">Panel</div></div></div>
+    <nav class="nav">
+      <a href="/pages/admin.html"><span class="ico"><i class="fa-solid fa-house"></i></span> Dashboard</a>
+      <a href="/pages/productos.html"><span class="ico"><i class="fa-solid fa-box"></i></span> Productos</a>
+      <a href="/pages/clientes.html" class="active"><span class="ico"><i class="fa-solid fa-user"></i></span> Clientes</a>
+      <a href="/pages/proveedores.html"><span class="ico"><i class="fa-solid fa-truck"></i></span> Proveedores</a>
+      <a href="/pages/inventario.html"><span class="ico"><i class="fa-solid fa-warehouse"></i></span> Inventario</a>
+      <a href="/pages/ventas.html"><span class="ico"><i class="fa-solid fa-cash-register"></i></span> Ventas</a>
+    </nav>
+    <div style="margin-top:18px"><a href="#" id="logout" class="nav"><span class="ico"><i class="fa-solid fa-arrow-right-from-bracket"></i></span> Cerrar sesión</a></div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="search card"><i class="fa-solid fa-magnifying-glass" style="margin-right:8px;color:var(--muted)"></i><input placeholder="Buscar clientes..." id="search" /></div>
+      <div class="actions"><a class="button" id="newBtn">Nuevo cliente</a></div>
+    </div>
+
+    <div class="card">
+      <h3>Clientes</h3>
+      <pre id="list"></pre>
+    </div>
+
+    <div id="formCard" class="card" style="display:none">
+      <h3>Crear cliente</h3>
+      <div class="form-row">
+        <input class="input" id="cNombre" placeholder="Nombre" />
+        <input class="input" id="cApellido" placeholder="Apellido" />
+        <input class="input" id="cCedula" placeholder="Cédula" />
+        <input class="input" id="cDireccion" placeholder="Dirección" />
+      </div>
+      <div style="margin-top:10px"><button class="button" id="saveC">Guardar</button> <button class="button ghost" id="cancelC">Cancelar</button></div>
+    </div>
+  </main>
+</div>
+
+<script>
+async function load(){
+  const r = await fetch('/api/clientes', {credentials:'include'});
+  const data = await r.json();
+  document.getElementById('list').innerText = JSON.stringify(data, null, 2);
+}
+document.getElementById('newBtn').addEventListener('click', ()=>{document.getElementById('formCard').style.display='block'});
+document.getElementById('cancelC').addEventListener('click', ()=>{document.getElementById('formCard').style.display='none'});
+document.getElementById('saveC').addEventListener('click', async ()=>{
+  const payload = { nombre: document.getElementById('cNombre').value, apellido: document.getElementById('cApellido').value, cedula: document.getElementById('cCedula').value, direccion: document.getElementById('cDireccion').value };
+  const res = await fetch('/api/clientes', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload), credentials:'include'});
+  const j = await res.json();
+  alert(j.message || 'ok');
+  document.getElementById('formCard').style.display='none';
+  load();
+});
+document.getElementById('logout').addEventListener('click', async (e)=>{e.preventDefault(); await fetch('/api/auth/logout',{method:'POST', credentials:'include'}); window.location='/'});
+load();
+</script>
+</body>
+</html>

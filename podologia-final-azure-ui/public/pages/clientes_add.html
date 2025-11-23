@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Añadir Cliente</title></head>
+<body>
+<h2>Añadir Cliente</h2>
+<form id="clienteForm">
+  <input name="nombre" placeholder="Nombre" required />
+  <input name="apellido" placeholder="Apellido" required />
+  <input name="cedula" placeholder="Cédula" />
+  <input name="direccion" placeholder="Dirección" />
+  <button>Agregar</button>
+</form>
+<div id="msg"></div>
+<script>
+  document.getElementById('clienteForm').addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const payload = { nombre: fd.get('nombre'), apellido: fd.get('apellido'), cedula: fd.get('cedula'), direccion: fd.get('direccion') };
+    const res = await fetch('/api/clientes', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)});
+    const j = await res.json();
+    document.getElementById('msg').innerText = j.message || JSON.stringify(j);
+  });
+</script>
+</body>
+</html>

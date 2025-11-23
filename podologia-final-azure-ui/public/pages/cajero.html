@@ -1,0 +1,17 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Cajero - Podologia</title></head>
+<body>
+<h1>Panel Cajero</h1>
+<a href="/pages/ventas.html">Vender</a> |
+<a href="/pages/clientes_add.html">Añadir Cliente</a> |
+<a href="#" id="logout">Salir</a>
+<div id="content"></div>
+<script>
+  document.getElementById('logout').addEventListener('click', async ()=> {
+    await fetch('/api/auth/logout', {method:'POST'});
+    window.location='/';
+  });
+</script>
+</body>
+</html>

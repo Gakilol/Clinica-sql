@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Productos</title>
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand"><div class="logo">P</div><div><h1>Podología</h1><div style="font-size:12px;color:var(--muted)">Panel</div></div></div>
+      <nav class="nav">
+        <a href="/pages/admin.html"><span class="ico"><i class="fa-solid fa-house"></i></span> Dashboard</a>
+        <a href="/pages/productos.html" class="active"><span class="ico"><i class="fa-solid fa-box"></i></span> Productos</a>
+        <a href="/pages/clientes.html"><span class="ico"><i class="fa-solid fa-user"></i></span> Clientes</a>
+        <a href="/pages/proveedores.html"><span class="ico"><i class="fa-solid fa-truck"></i></span> Proveedores</a>
+        <a href="/pages/inventario.html"><span class="ico"><i class="fa-solid fa-warehouse"></i></span> Inventario</a>
+        <a href="/pages/ventas.html"><span class="ico"><i class="fa-solid fa-cash-register"></i></span> Ventas</a>
+      </nav>
+      <div style="margin-top:18px"><a href="#" id="logout" class="nav"><span class="ico"><i class="fa-solid fa-arrow-right-from-bracket"></i></span> Cerrar sesión</a></div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <div class="search card"><i class="fa-solid fa-magnifying-glass" style="margin-right:8px;color:var(--muted)"></i><input placeholder="Buscar productos..." id="search" /></div>
+        <div class="actions"><a class="button" id="newBtn">Nuevo producto</a></div>
+      </div>
+
+      <div class="card">
+        <h3>Productos</h3>
+        <div style="margin-top:12px">
+          <table class="table" id="prodTable">
+            <thead><tr><th>ID</th><th>Nombre</th><th>Precio</th><th>Proveedor</th><th>Acciones</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="modal" style="display:none" class="card">
+        <h3 id="modalTitle">Crear producto</h3>
+        <div class="form-row">
+          <input class="input" id="pNombre" placeholder="Nombre" />
+          <input class="input" id="pPrecio" placeholder="Precio" />
+          <input class="input" id="pProv" placeholder="ID proveedor" />
+        </div>
+        <div style="margin-top:10px">
+          <button class="button" id="saveP">Guardar</button>
+          <button class="button ghost" id="cancelP">Cancelar</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+<script>
+async function load(){
+  const r = await fetch('/api/productos', {credentials:'include'});
+  const data = await r.json();
+  const tbody = document.querySelector('#prodTable tbody');
+  tbody.innerHTML = '';
+  data.forEach(p=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${p.ID_producto}</td><td>${p.nombre||''}</td><td>${p.precio_unitario||''}</td><td>${p.ID_proveedor||''}</td>
+    <td><button data-id="${p.ID_producto}" class="button ghost btn-edit">Editar</button> <button data-id="${p.ID_producto}" class="button btn-del">Eliminar</button></td>`;
+    tbody.appendChild(tr);
+  });
+}
+document.getElementById('newBtn').addEventListener('click', ()=>{document.getElementById('modal').style.display='block'});
+document.getElementById('cancelP').addEventListener('click', ()=>{document.getElementById('modal').style.display='none'});
+
+document.getElementById('saveP').addEventListener('click', async ()=>{
+  const payload = { nombre: document.getElementById('pNombre').value, precio_unitario: parseFloat(document.getElementById('pPrecio').value)||0, ID_proveedor: parseInt(document.getElementById('pProv').value)||0 };
+  const res = await fetch('/api/productos', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload), credentials:'include'});
+  const j = await res.json();
+  alert(j.message || 'ok');
+  document.getElementById('modal').style.display='none';
+  load();
+});
+
+document.addEventListener('click', async (e)=>{
+  if(e.target.classList.contains('btn-del')){
+    const id = e.target.dataset.id;
+    if(!confirm('Eliminar producto '+id+'?')) return;
+    const res = await fetch('/api/productos/'+id, {method:'DELETE', credentials:'include'});
+    const j = await res.json();
+    alert(j.message || 'ok');
+    load();
+  }
+  if(e.target.classList.contains('btn-edit')){
+    alert('Editar no implementado en UI aún');
+  }
+});
+
+document.getElementById('logout').addEventListener('click', async (e)=>{
+  e.preventDefault();
+  await fetch('/api/auth/logout',{method:'POST', credentials:'include'});
+  window.location='/';
+});
+
+load();
+</script>
+</body>
+</html>
