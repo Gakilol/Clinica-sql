@@ -1,9 +1,0 @@
-# Variables de entorno para Vercel / Azure
-DB_SERVER=podologiaserver.database.windows.net
-DB_USER=sqladmin
-DB_PASSWORD=Megalovani@2
-DB_DATABASE=PodologiaDB
-JWT_SECRET=TuJWTSecretAqui_usa_valor_fuerte
-
-# Opcionales (si usas Azure AD auth change)
-# AZURE_* etc
