@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Podología App</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="brand">Podología App</div>
+    <div id="session-area"></div>
+  </header>
+
+  <main class="container" id="main">
+    <section id="welcome">
+      <h1>Bienvenido</h1>
+      <p>Inicia sesión para acceder al panel.</p>
+      <button id="btn-show-login" class="btn primary">Iniciar sesión</button>
+    </section>
+
+    <section id="login-section" class="hidden card">
+      <h2>Iniciar sesión</h2>
+      <form id="login-form">
+        <input id="username" placeholder="Usuario" required />
+        <input id="password" type="password" placeholder="Contraseña" required/>
+        <div class="row">
+          <button class="btn primary">Entrar</button>
+          <button type="button" id="btn-demo-admin" class="btn">Demo admin</button>
+          <button type="button" id="btn-demo-cajero" class="btn">Demo cajero</button>
+        </div>
+        <div id="login-error" class="error"></div>
+      </form>
+    </section>
+
+    <section id="dashboard" class="hidden">
+      <div class="controls" id="role-controls"></div>
+      <div id="view-area"></div>
+    </section>
+  </main>
+
+  <template id="tpl-client-card">
+    <div class="card client-card">
+      <div class="client-info">
+        <div class="name"></div>
+        <div class="meta"></div>
+      </div>
+      <div class="actions"></div>
+    </div>
+  </template>
+
+  <script src="/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Inventario</title><link rel="stylesheet" href="/assets/styles/dark.css"></head>
+<body class="dark">
+<div class="card"><h2>Inventario</h2><table id="tblInv"><thead><tr><th>ID</th><th>Producto</th><th>Existencia</th><th>Min</th><th>Max</th></tr></thead><tbody></tbody></table></div>
+<script>
+async function loadInv(){ const res=await fetch('/api/inventory'); const data=await res.json(); const tb=document.querySelector('#tblInv tbody'); tb.innerHTML=''; data.forEach(i=>{ const tr=document.createElement('tr'); tr.innerHTML=`<td>${i.ID_inventario}</td><td>${i.producto_nombre||''}</td><td>${i.existencia}</td><td>${i.stock_min}</td><td>${i.stock_max}</td>`; tb.appendChild(tr); }); }
+document.addEventListener('DOMContentLoaded', loadInv);
+</script>
+</body></html>

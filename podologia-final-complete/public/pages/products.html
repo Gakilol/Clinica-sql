@@ -1,0 +1,32 @@
+
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Productos - Podologia</title>
+  <link rel="stylesheet" href="/assets/styles/dark.css">
+</head>
+<body class="dark">
+  <div class="card">
+    <h2>Productos</h2>
+    <button id="btnNew">Agregar Producto</button>
+    <table id="tblProducts"><thead><tr><th>ID</th><th>Nombre</th><th>Proveedor</th><th>Precio</th><th>Acciones</th></tr></thead><tbody></tbody></table>
+  </div>
+<script>
+async function loadProducts(){
+  const res = await fetch('/api/products');
+  const data = await res.json();
+  const tbody = document.querySelector('#tblProducts tbody');
+  tbody.innerHTML='';
+  data.forEach(p=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML = `<td>${p.ID_producto}</td><td>${p.nombre}</td><td>${p.proveedor_nombre||''}</td><td>${p.precio_unitario}</td>
+      <td><button onclick="del(${p.ID_producto})">Eliminar</button></td>`;
+    tbody.appendChild(tr);
+  });
+}
+async function del(id){ if(!confirm('Eliminar?')) return; await fetch('/api/products?id='+id,{method:'DELETE'}); loadProducts(); }
+document.addEventListener('DOMContentLoaded', ()=>{ loadProducts(); });
+</script>
+</body>
+</html>
